@@ -1,0 +1,145 @@
+[gd_scene format=3 uid="uid://c4kbdthg225cn"]
+
+[ext_resource type="Script" uid="uid://dngyerf0x8lt5" path="res://Scripts/Player/player_controller.gd" id="1_v0iea"]
+[ext_resource type="Script" uid="uid://c67fnbnruswkr" path="res://Scripts/Player/ui.gd" id="2_6t5aa"]
+[ext_resource type="Script" uid="uid://dekyaarig6443" path="res://Scripts/Player/interact_manager.gd" id="3_3smsa"]
+[ext_resource type="FontFile" uid="uid://b1f72vv0gu1bx" path="res://Fonts/PixelOperator.ttf" id="3_vgqql"]
+[ext_resource type="Script" uid="uid://oau0bebf4bj0" path="res://Scripts/Player/weapon_manager.gd" id="5_fkybt"]
+[ext_resource type="Script" uid="uid://crn8hpqe3fryo" path="res://Scripts/Player/sound_manager.gd" id="6_x3wgy"]
+[ext_resource type="AudioStream" uid="uid://dn6oloia1i6x2" path="res://Sounds/Footsteps/concrete_footstep_1.wav" id="7_3smsa"]
+
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ufjhq"]
+radius = 0.45
+
+[node name="Player" type="CharacterBody3D" unique_id=1319092473 node_paths=PackedStringArray("camera_holder", "weapon_holder")]
+script = ExtResource("1_v0iea")
+walk_speed = 5.0
+sprint_speed = 7.0
+camera_holder = NodePath("HeadOriginalPosition/Head/CameraHolder")
+weapon_holder = NodePath("HeadOriginalPosition/Head/CameraHolder/Camera3D/WeaponHolder")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=1029301263]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1, 0)
+shape = SubResource("CapsuleShape3D_ufjhq")
+
+[node name="HeadOriginalPosition" type="Node3D" parent="." unique_id=1352559508]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.79, 0)
+
+[node name="Head" type="Node3D" parent="HeadOriginalPosition" unique_id=1299590362]
+unique_name_in_owner = true
+
+[node name="CameraHolder" type="Node3D" parent="HeadOriginalPosition/Head" unique_id=1013756262]
+unique_name_in_owner = true
+
+[node name="Camera3D" type="Camera3D" parent="HeadOriginalPosition/Head/CameraHolder" unique_id=267344699]
+unique_name_in_owner = true
+
+[node name="WeaponHolder" type="Node3D" parent="HeadOriginalPosition/Head/CameraHolder/Camera3D" unique_id=907007815]
+unique_name_in_owner = true
+
+[node name="BulletRaycast" type="RayCast3D" parent="HeadOriginalPosition/Head/CameraHolder/Camera3D" unique_id=443511247]
+target_position = Vector3(0, 0, -999)
+
+[node name="InteractRaycast" type="RayCast3D" parent="HeadOriginalPosition/Head/CameraHolder/Camera3D" unique_id=241235725]
+target_position = Vector3(0, 0, -2)
+collision_mask = 256
+
+[node name="WorldModel" type="Node3D" parent="." unique_id=2105951000]
+
+[node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel" unique_id=1839580569]
+
+[node name="WeaponManager" type="Node3D" parent="." unique_id=799233520 node_paths=PackedStringArray("player", "bullet_raycast", "view_model_container")]
+script = ExtResource("5_fkybt")
+player = NodePath("..")
+bullet_raycast = NodePath("../HeadOriginalPosition/Head/CameraHolder/Camera3D/BulletRaycast")
+view_model_container = NodePath("../HeadOriginalPosition/Head/CameraHolder/Camera3D/WeaponHolder")
+
+[node name="AudioStreamPlayer3D" type="AudioStreamPlayer3D" parent="WeaponManager" unique_id=1941150700]
+volume_db = -22.571
+
+[node name="InteractManager" type="Node3D" parent="." unique_id=1656842130 node_paths=PackedStringArray("interact_raycast", "interact_ui_label")]
+script = ExtResource("3_3smsa")
+interact_raycast = NodePath("../HeadOriginalPosition/Head/CameraHolder/Camera3D/InteractRaycast")
+interact_ui_label = NodePath("../CanvasLayer/UI/InteractLabel")
+
+[node name="StairsAheadRayCast3D" type="RayCast3D" parent="." unique_id=1107504101]
+unique_name_in_owner = true
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.45426583, -0.72674996)
+target_position = Vector3(0, -0.55, 0)
+
+[node name="StairsBelowRayCast3D" type="RayCast3D" parent="." unique_id=1800772204]
+unique_name_in_owner = true
+target_position = Vector3(0, -0.75, 0)
+
+[node name="CanvasLayer" type="CanvasLayer" parent="." unique_id=1826146356]
+
+[node name="UI" type="Control" parent="CanvasLayer" unique_id=927963030]
+layout_mode = 3
+anchors_preset = 15
+anchor_right = 1.0
+anchor_bottom = 1.0
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+script = ExtResource("2_6t5aa")
+
+[node name="ColorRect" type="ColorRect" parent="CanvasLayer/UI" unique_id=1433245204]
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -2.5
+offset_top = -2.5
+offset_right = 2.5
+offset_bottom = 2.5
+grow_horizontal = 2
+grow_vertical = 2
+mouse_filter = 2
+
+[node name="SpeedLabel" type="Label" parent="CanvasLayer/UI" unique_id=1595274779]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -29.0
+offset_top = 5.075012
+offset_right = 29.0
+offset_bottom = 21.075012
+grow_horizontal = 2
+grow_vertical = 2
+pivot_offset_ratio = Vector2(0.5, 0.5)
+size_flags_horizontal = 4
+theme_override_fonts/font = ExtResource("3_vgqql")
+text = "0.0 SPEED"
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="InteractLabel" type="Label" parent="CanvasLayer/UI" unique_id=11761260]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 8
+anchor_left = 0.5
+anchor_top = 0.5
+anchor_right = 0.5
+anchor_bottom = 0.5
+offset_left = -38.5
+offset_top = 16.144989
+offset_right = 38.5
+offset_bottom = 32.14499
+grow_horizontal = 2
+grow_vertical = 2
+theme_override_fonts/font = ExtResource("3_vgqql")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="SoundManager" type="Node3D" parent="." unique_id=720851764]
+script = ExtResource("6_x3wgy")
+
+[node name="FootstepSFX" type="AudioStreamPlayer3D" parent="SoundManager" unique_id=1382866229]
+stream = ExtResource("7_3smsa")
+volume_db = -16.119

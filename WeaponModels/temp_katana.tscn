@@ -1,0 +1,11 @@
+[gd_scene format=3 uid="uid://8mott7e3mn7a"]
+
+[ext_resource type="PackedScene" uid="uid://b2a1v1er3vgtl" path="res://katana_low_poly_gltf/scene.gltf" id="1_34ldc"]
+
+[node name="FAB converted" unique_id=1638675933 instance=ExtResource("1_34ldc")]
+
+[node name="Object_18" parent="FAB converted model/root/GLTF_SceneRootNode/Entrelazado inf_13/Manga_12/Base_7/Cube_6/Cube_001_5/Cube_011_4/Cube_002_3" parent_id_path=PackedInt32Array(1324806412) index="0" unique_id=875584865]
+visible = false
+
+[node name="Object_19" parent="FAB converted model/root/GLTF_SceneRootNode/Entrelazado inf_13/Manga_12/Base_7/Cube_6/Cube_001_5/Cube_011_4/Cube_002_3" parent_id_path=PackedInt32Array(1324806412) index="1" unique_id=1509576451]
+visible = false

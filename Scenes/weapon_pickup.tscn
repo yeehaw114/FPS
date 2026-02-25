@@ -1,0 +1,21 @@
+[gd_scene format=3 uid="uid://c8flcpmihepxf"]
+
+[ext_resource type="Script" uid="uid://cthc44wfp8yab" path="res://Scripts/weapon_pickup.gd" id="1_12psw"]
+[ext_resource type="Resource" uid="uid://2u5g8cwtaxnp" path="res://Resources/pistol.tres" id="2_2w3b2"]
+[ext_resource type="PackedScene" uid="uid://bt1eory77080v" path="res://WeaponModels/temp_pistol.tscn" id="3_3wux3"]
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c256x"]
+size = Vector3(0.06, 0.22, 0.395)
+
+[node name="WeaponPickup" type="RigidBody3D" unique_id=507376121]
+transform = Transform3D(0.54691696, 0.7814281, 0.3004196, -0.82629335, 0.5615485, 0.043619387, -0.13461474, -0.27209088, 0.9528092, 0, 0, 0)
+collision_layer = 257
+script = ExtResource("1_12psw")
+weapon_resource = ExtResource("2_2w3b2")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="." unique_id=861769274]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.12145221, 0.029165268, 0.028332666)
+shape = SubResource("BoxShape3D_c256x")
+
+[node name="Sketchfab_Scene" parent="." unique_id=1649781894 instance=ExtResource("3_3wux3")]
+transform = Transform3D(0.040000003, -2.6775524e-09, -1.3969839e-09, 9.313226e-10, 0.040000003, -9.313226e-10, -4.656613e-10, -9.313226e-10, 0.040000003, 0, 0, 0)

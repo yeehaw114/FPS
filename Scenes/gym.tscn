@@ -1,0 +1,154 @@
+[gd_scene format=3 uid="uid://cmxtvufegpb7c"]
+
+[ext_resource type="PackedScene" uid="uid://c4kbdthg225cn" path="res://Scenes/player.tscn" id="1_stjpo"]
+[ext_resource type="Texture2D" uid="uid://d0ujqry08dk1m" path="res://kenney_prototype-textures/PNG/Dark/texture_01.png" id="1_wuvem"]
+[ext_resource type="Texture2D" uid="uid://esy2k54osivx" path="res://kenney_prototype-textures/PNG/Orange/texture_01.png" id="3_ei0x5"]
+[ext_resource type="PackedScene" uid="uid://bak8ltrhbmlv5" path="res://CSGStairMaker3D.tscn" id="4_ufjhq"]
+[ext_resource type="Texture2D" uid="uid://pxkt6nogq6rh" path="res://kenney_prototype-textures/PNG/Orange/texture_08.png" id="5_stjpo"]
+[ext_resource type="PackedScene" uid="uid://c8flcpmihepxf" path="res://Scenes/weapon_pickup.tscn" id="6_c256x"]
+[ext_resource type="Texture2D" uid="uid://c2enc0snajcoe" path="res://kenney_prototype-textures/PNG/Purple/texture_01.png" id="7_3c3f4"]
+
+[sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i3sdk"]
+sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+ground_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
+
+[sub_resource type="Sky" id="Sky_wuvem"]
+sky_material = SubResource("ProceduralSkyMaterial_i3sdk")
+
+[sub_resource type="Environment" id="Environment_ei0x5"]
+background_mode = 2
+sky = SubResource("Sky_wuvem")
+tonemap_mode = 2
+ssao_enabled = true
+glow_enabled = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_wuvem"]
+albedo_texture = ExtResource("1_wuvem")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufjhq"]
+albedo_texture = ExtResource("3_ei0x5")
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stjpo"]
+albedo_texture = ExtResource("3_ei0x5")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_c256x"]
+albedo_texture = ExtResource("3_ei0x5")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_3c3f4"]
+albedo_texture = ExtResource("5_stjpo")
+uv1_triplanar = true
+uv1_world_triplanar = true
+
+[sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u7x6n"]
+albedo_texture = ExtResource("7_3c3f4")
+uv1_triplanar = true
+
+[sub_resource type="BoxShape3D" id="BoxShape3D_c256x"]
+
+[node name="Gym" type="Node3D" unique_id=1050519239]
+
+[node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=737920427]
+environment = SubResource("Environment_ei0x5")
+
+[node name="Player" parent="." unique_id=1319092473 instance=ExtResource("1_stjpo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6996274, 0)
+walk_speed = 5.3
+sprint_speed = 8.0
+cam_rotation_amount = 0.01
+weapon_sway_amount = 0.1
+weapon_rotation_amount = 0.01
+
+[node name="Enviroment" type="Node3D" parent="." unique_id=123675391]
+
+[node name="CSGBox3D" type="CSGBox3D" parent="Enviroment" unique_id=706338928]
+material_override = SubResource("StandardMaterial3D_wuvem")
+use_collision = true
+size = Vector3(50, 0.5, 50)
+
+[node name="CSGBox3D2" type="CSGBox3D" parent="Enviroment" unique_id=911792442]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.75, 0)
+material_override = SubResource("StandardMaterial3D_ufjhq")
+use_collision = true
+
+[node name="CSGBox3D5" type="CSGBox3D" parent="Enviroment" unique_id=1750782405]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 5)
+material_override = SubResource("StandardMaterial3D_ufjhq")
+use_collision = true
+size = Vector3(3, 3, 3)
+
+[node name="CSGBox3D4" type="CSGBox3D" parent="Enviroment" unique_id=2091888908]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 2.1448216, -1)
+material_override = SubResource("StandardMaterial3D_ufjhq")
+use_collision = true
+
+[node name="CSGBox3D3" type="CSGBox3D" parent="Enviroment" unique_id=735381318]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 1.25, -2)
+material_override = SubResource("StandardMaterial3D_stjpo")
+use_collision = true
+size = Vector3(1, 2, 1)
+
+[node name="CSGBox3D6" type="CSGBox3D" parent="Enviroment" unique_id=2036794124]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 24, 1.25, -2)
+material_override = SubResource("StandardMaterial3D_stjpo")
+use_collision = true
+size = Vector3(1, 2, 1)
+
+[node name="CSGPolygon3D" type="CSGPolygon3D" parent="Enviroment" unique_id=305889953]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.1717639, 3)
+material_override = SubResource("StandardMaterial3D_c256x")
+use_collision = true
+polygon = PackedVector2Array(0, 0, 1, 1, 1, 0)
+
+[node name="CSGPolygon3D2" type="CSGPolygon3D" parent="Enviroment" unique_id=417381882]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 6, 0.172, 4)
+material_override = SubResource("StandardMaterial3D_c256x")
+use_collision = true
+polygon = PackedVector2Array(0, 0, 1, 1.5, 1, 0)
+
+[node name="CSGPolygon3D3" type="CSGPolygon3D" parent="Enviroment" unique_id=237459935]
+transform = Transform3D(-4.371139e-08, 0, 1, 0, 1, 0, -1, 0, -4.371139e-08, 41.25312, 0.42812026, -1.2721815)
+material_override = SubResource("StandardMaterial3D_c256x")
+use_collision = true
+polygon = PackedVector2Array(-0.78, 0, 1, 2, 1, 0)
+depth = 15.67
+
+[node name="CSGStairMaker3D" parent="Enviroment" unique_id=591095123 instance=ExtResource("4_ufjhq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -3, 1.75, 4)
+material_override = SubResource("StandardMaterial3D_3c3f4")
+use_collision = true
+size = Vector3(3, 3, 1)
+num_stairs = 11
+
+[node name="CSGStairMaker3D3" parent="Enviroment" unique_id=1659350028 instance=ExtResource("4_ufjhq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 22.5, 1.25, -2)
+material_override = SubResource("StandardMaterial3D_3c3f4")
+use_collision = true
+size = Vector3(2, 2, 1)
+num_stairs = 12
+
+[node name="CSGStairMaker3D2" parent="Enviroment" unique_id=718270154 instance=ExtResource("4_ufjhq")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -1.75, 1.75, 9)
+material_override = SubResource("StandardMaterial3D_3c3f4")
+use_collision = true
+size = Vector3(6.39, 3, 1)
+num_stairs = 10
+
+[node name="PhysicsObjects" type="Node3D" parent="." unique_id=909133689]
+
+[node name="WeaponPickup" parent="PhysicsObjects" unique_id=507376121 instance=ExtResource("6_c256x")]
+transform = Transform3D(0.54691696, 0.78142804, 0.30041957, -0.82629335, 0.5615484, 0.043619372, -0.13461475, -0.27209085, 0.95280915, 2.191558, 1.6060121, 0.00048422813)
+
+[node name="RigidBody3D" type="RigidBody3D" parent="PhysicsObjects" unique_id=2142379661]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1264992, -3.410487)
+
+[node name="CSGBox3D" type="CSGBox3D" parent="PhysicsObjects/RigidBody3D" unique_id=2086836254]
+material_override = SubResource("StandardMaterial3D_u7x6n")
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsObjects/RigidBody3D" unique_id=930606160]
+shape = SubResource("BoxShape3D_c256x")

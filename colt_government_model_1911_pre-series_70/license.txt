@@ -1,0 +1,11 @@
+Model Information:
+* title:	Colt Government Model 1911 "Pre-Series 70"
+* source:	https://sketchfab.com/3d-models/colt-government-model-1911-pre-series-70-d678acd79a3e48c7a390922192a3cc2f
+* author:	8sianDude (https://sketchfab.com/haoliu95)
+
+Model License:
+* license type:	CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
+* requirements:	Author must be credited. Commercial use is allowed.
+
+If you use this 3D model in your project be sure to copy paste this credit wherever you share it:
+This work is based on "Colt Government Model 1911 "Pre-Series 70"" (https://sketchfab.com/3d-models/colt-government-model-1911-pre-series-70-d678acd79a3e48c7a390922192a3cc2f) by 8sianDude (https://sketchfab.com/haoliu95) licensed under CC-BY-4.0 (http://creativecommons.org/licenses/by/4.0/)
