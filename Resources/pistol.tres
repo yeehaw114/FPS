@@ -1,6 +1,7 @@
 [gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://2u5g8cwtaxnp"]
 
 [ext_resource type="Script" uid="uid://c8kqkfya7jrq1" path="res://Resources/Scripts/weapon_resource.gd" id="1_tkhkc"]
+[ext_resource type="PackedScene" uid="uid://bt1eory77080v" path="res://WeaponModels/temp_pistol.tscn" id="1_vnhtp"]
 [ext_resource type="PackedScene" uid="uid://46y5xf1h11ta" path="res://Scenes/pistol.tscn" id="2_7j71y"]
 [ext_resource type="AudioStream" uid="uid://b0xr3ee0i1jrk" path="res://Sounds/Guns/freesound_community-meaty-gunshot-101257.mp3" id="2_yvly7"]
 [ext_resource type="AudioStream" uid="uid://bjplg6mwuan82" path="res://Sounds/Guns/freesound_community-pistol-draw-unholster-80799.mp3" id="3_vnhtp"]
@@ -9,8 +10,10 @@
 script = ExtResource("1_tkhkc")
 name = "M1911"
 view_model = ExtResource("2_7j71y")
+glb_model = ExtResource("1_vnhtp")
 view_model_pos = Vector3(0.23, -0.105, -0.32)
 view_model_rot = Vector3(0, 180, 0)
 view_model_scale = Vector3(0.03, 0.03, 0.03)
+weapon_pickup_scale = Vector3(0.04, 0.04, 0.04)
 shoot_sound = ExtResource("2_yvly7")
 unholster_sound = ExtResource("3_vnhtp")

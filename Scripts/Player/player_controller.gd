@@ -7,6 +7,7 @@ extends CharacterBody3D
 @onready var sound_manager: Node3D = $SoundManager
 
 @export var UI_node : Control
+@export var physics_objects_node : Node3D
 
 @export var look_sensitivity : float = 0.006
 @export var jump_velocity := 6.0
@@ -91,6 +92,8 @@ func _unhandled_input(event):
 				if interactable_object.weapon_resource != null:
 					weapon_manager.equip_weapon(interactable_object.weapon_resource)
 					interactable_object.despawn()
+	if Input.is_action_just_pressed("drop") and weapon_manager.current_weapon:
+		weapon_manager.drop_current_weapon(weapon_manager.current_weapon_view_model,weapon_manager.current_weapon)
 	
 	if Input.is_action_just_pressed("shoot"):
 		weapon_manager.attempt_shoot()
@@ -101,7 +104,7 @@ func _unhandled_input(event):
 			rotate_y(-event.relative.x * look_sensitivity)
 			%Camera3D.rotation.x = clamp(%Camera3D.rotation.x, deg_to_rad(-90), deg_to_rad(90))
 			
-
+var has_stepped_this_cycle := false
 func _headbob_effect(delta):
 	headbob_time += delta * self.velocity.length()
 	%Camera3D.transform.origin = Vector3(
@@ -109,6 +112,13 @@ func _headbob_effect(delta):
 		sin(headbob_time * HEADBOB_FREQUENCY) * HEADBOB_MOVE_AMOUNT,
 		0
 	)
+	if sin(headbob_time * HEADBOB_FREQUENCY) < -0.9:
+		if not has_stepped_this_cycle:
+			sound_manager.play_footstep()
+			print('footstep')
+			has_stepped_this_cycle = true
+	else:
+		has_stepped_this_cycle = false
 
 var _saved_camera_global_pos = null
 func _save_camera_pos_for_smoothing():
@@ -187,16 +197,6 @@ func weapon_bob(vel : float, delta):
 				def_weapon_holder_pos.x + sin(time * bob_freq * 0.5) * bob_amount,
 				10 * delta
 			)
-			
-			#Detect bottom of sine wave
-			if wave < -0.99 and not step_triggered:
-				sound_manager.play_footstep()   # your sound function
-				step_triggered = true
-			
-			# reset trigger after leaving trough
-			if wave > -0.8:
-				step_triggered = false
-		
 		else:
 			weapon_holder.position.y = lerp(weapon_holder.position.y, def_weapon_holder_pos.y, 10 * delta)
 			weapon_holder.position.x = lerp(weapon_holder.position.x, def_weapon_holder_pos.x, 10 * delta)
@@ -290,7 +290,7 @@ func _handle_ground_physics(delta: float) -> void:
 		new_speed /= self.velocity.length()
 	self.velocity *= new_speed
 	
-	#_headbob_effect(delta)
+	_headbob_effect(delta)
 
 func _handle_noclip(delta: float) -> bool:
 	if Input.is_action_just_pressed('noclip') and OS.has_feature("debug"):

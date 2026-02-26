@@ -17,6 +17,7 @@ const RAYCAST_DIST : float = 9999 # Too far seems to break it
 
 @export var player : CharacterBody3D
 @export var bullet_raycast : RayCast3D
+@export var weapon_pickup_scene : PackedScene
 
 @export var animation_tree : AnimationTree
 
@@ -49,10 +50,7 @@ func update_weapon_model() -> void:
 			apply_clip_and_fov_shader_to_view_model(current_weapon_view_model)
 			#%WeaponHolder.target_object = current_weapon_view_model
 			#%WeaponHolder.set_values()
-			
-			current_weapon_view_model.target_object = current_weapon_view_model
-			current_weapon_view_model.weapon_resource = current_weapon
-			current_weapon_view_model.set_values()
+			current_weapon_view_model.set_target_object(current_weapon)
 			
 			if current_weapon_view_model.get_node_or_null("AnimationPlayer"):
 				current_weapon_view_model.get_node_or_null("AnimationPlayer").connect("current_animation_changed", current_anim_changed)
@@ -74,16 +72,33 @@ func apply_clip_and_fov_shader_to_view_model(node3d : Node3D, fov_or_negative_fo
 	var all_mesh_instances = node3d.find_children("*", "MeshInstance3D")
 	if node3d is MeshInstance3D:
 		all_mesh_instances.push_back(node3d)
+
 	for mesh_instance in all_mesh_instances:
 		var mesh = mesh_instance.mesh
-		# Important to turn shadow casting off for view model or will cause issues with both
-		# view model, casting shadows on itself once unclipped, & also will look weird casting on world.
+		if mesh == null:
+			continue
+
 		mesh_instance.cast_shadow = GeometryInstance3D.SHADOW_CASTING_SETTING_OFF
+
+		# store originals (instance overrides if present, otherwise mesh materials)
+		var original_materials := []
 		for surface_idx in mesh.get_surface_count():
-			var base_mat = mesh.surface_get_material(surface_idx)
-			if not base_mat is BaseMaterial3D: continue
+			var override_mat = mesh_instance.get_surface_override_material(surface_idx)
+			if override_mat:
+				original_materials.append(override_mat)
+			else:
+				original_materials.append(mesh.surface_get_material(surface_idx))
+		mesh_instance.set_meta("original_materials", original_materials)
+
+		# apply shader ONLY to this mesh instance
+		for surface_idx in mesh.get_surface_count():
+			var base_mat = original_materials[surface_idx]
+			if not base_mat is BaseMaterial3D:
+				continue
+
 			var weapon_shader_material := ShaderMaterial.new()
 			weapon_shader_material.shader = preload("res://Shaders/weapon_clip_and_fov_shader.gdshader")
+
 			weapon_shader_material.set_shader_parameter("texture_albedo", base_mat.albedo_texture)
 			weapon_shader_material.set_shader_parameter("texture_metallic", base_mat.metallic_texture)
 			weapon_shader_material.set_shader_parameter("texture_roughness", base_mat.roughness_texture)
@@ -93,9 +108,21 @@ func apply_clip_and_fov_shader_to_view_model(node3d : Node3D, fov_or_negative_fo
 			weapon_shader_material.set_shader_parameter("specular", base_mat.metallic_specular)
 			weapon_shader_material.set_shader_parameter("roughness", base_mat.roughness)
 			weapon_shader_material.set_shader_parameter("viewmodel_fov", fov_or_negative_for_unchanged)
-			var tex_channels = { 0: Vector4(1., 0., 0., 0.), 1: Vector4(0., 1., 0., 0.), 2: Vector4(0., 0., 1., 0.), 3: Vector4(1., 0., 0., 1.), 4: Vector4() }
-			weapon_shader_material.set_shader_parameter("metallic_texture_channel", tex_channels[base_mat.metallic_texture_channel])
-			mesh.surface_set_material(surface_idx, weapon_shader_material)
+
+			var tex_channels = {
+				0: Vector4(1., 0., 0., 0.),
+				1: Vector4(0., 1., 0., 0.),
+				2: Vector4(0., 0., 1., 0.),
+				3: Vector4(1., 0., 0., 1.),
+				4: Vector4()
+			}
+			weapon_shader_material.set_shader_parameter(
+				"metallic_texture_channel",
+				tex_channels[base_mat.metallic_texture_channel]
+			)
+
+			# ✅ THIS is the key fix — instance override only
+			mesh_instance.set_surface_override_material(surface_idx, weapon_shader_material)
 
 func play_sound(sound : AudioStream):
 	if sound:
@@ -236,6 +263,7 @@ func attempt_shoot():
 	if current_weapon_view_model:
 		current_weapon_view_model.apply_recoil()
 		play_sound(current_weapon.shoot_sound)
+		current_weapon_view_model.emit_muzzle_flash()
 		var raycast = bullet_raycast
 		raycast.target_position = Vector3(0,0,-abs(RAYCAST_DIST))
 		raycast.force_raycast_update()
@@ -251,3 +279,13 @@ func attempt_shoot():
 				obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
 			if obj.has_method("take_damage"):
 				obj.take_damage(self.damage)
+
+func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
+	if is_instance_valid(weapon) and weapon:
+		current_weapon = null
+		var new_weapon_pickup := weapon_pickup_scene.instantiate()
+		new_weapon_pickup.weapon_resource = weapon_resource
+		player.physics_objects_node.add_child(new_weapon_pickup)
+		new_weapon_pickup.global_position = %WeaponDropPoint.global_position
+		weapon.queue_free()
+		

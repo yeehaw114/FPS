@@ -7,6 +7,7 @@
 [ext_resource type="Texture2D" uid="uid://pxkt6nogq6rh" path="res://kenney_prototype-textures/PNG/Orange/texture_08.png" id="5_stjpo"]
 [ext_resource type="PackedScene" uid="uid://c8flcpmihepxf" path="res://Scenes/weapon_pickup.tscn" id="6_c256x"]
 [ext_resource type="Texture2D" uid="uid://c2enc0snajcoe" path="res://kenney_prototype-textures/PNG/Purple/texture_01.png" id="7_3c3f4"]
+[ext_resource type="Resource" uid="uid://2u5g8cwtaxnp" path="res://Resources/pistol.tres" id="7_u7x6n"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i3sdk"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -29,6 +30,8 @@ uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_ufjhq"]
 albedo_texture = ExtResource("3_ei0x5")
+uv1_triplanar = true
+uv1_world_triplanar = true
 
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_stjpo"]
 albedo_texture = ExtResource("3_ei0x5")
@@ -56,8 +59,9 @@ uv1_triplanar = true
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=737920427]
 environment = SubResource("Environment_ei0x5")
 
-[node name="Player" parent="." unique_id=1319092473 instance=ExtResource("1_stjpo")]
+[node name="Player" parent="." unique_id=1319092473 node_paths=PackedStringArray("physics_objects_node") instance=ExtResource("1_stjpo")]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6996274, 0)
+physics_objects_node = NodePath("../PhysicsObjects")
 walk_speed = 5.3
 sprint_speed = 8.0
 cam_rotation_amount = 0.01
@@ -143,6 +147,7 @@ num_stairs = 10
 
 [node name="WeaponPickup" parent="PhysicsObjects" unique_id=507376121 instance=ExtResource("6_c256x")]
 transform = Transform3D(0.54691696, 0.78142804, 0.30041957, -0.82629335, 0.5615484, 0.043619372, -0.13461475, -0.27209085, 0.95280915, 2.191558, 1.6060121, 0.00048422813)
+weapon_resource = ExtResource("7_u7x6n")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="PhysicsObjects" unique_id=2142379661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1264992, -3.410487)
