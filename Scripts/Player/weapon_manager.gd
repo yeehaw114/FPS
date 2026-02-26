@@ -280,12 +280,23 @@ func attempt_shoot():
 			if obj.has_method("take_damage"):
 				obj.take_damage(self.damage)
 
+@export var weapon_throw_speed : float = 2.0
 func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
 	if is_instance_valid(weapon) and weapon:
 		current_weapon = null
+		
 		var new_weapon_pickup := weapon_pickup_scene.instantiate()
 		new_weapon_pickup.weapon_resource = weapon_resource
 		player.physics_objects_node.add_child(new_weapon_pickup)
 		new_weapon_pickup.global_position = %WeaponDropPoint.global_position
-		weapon.queue_free()
 		
+		# Direction camera is facing (forward)
+		var cam := %Camera3D
+		var throw_dir = -cam.global_transform.basis.z.normalized()
+		throw_dir.y += 0.2
+		throw_dir = throw_dir.normalized()
+		
+		if new_weapon_pickup is RigidBody3D:
+			new_weapon_pickup.apply_impulse(throw_dir * weapon_throw_speed) # adjust strength
+		
+		weapon.queue_free()

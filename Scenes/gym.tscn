@@ -48,6 +48,8 @@ albedo_texture = ExtResource("5_stjpo")
 uv1_triplanar = true
 uv1_world_triplanar = true
 
+[sub_resource type="Curve3D" id="Curve3D_u7x6n"]
+
 [sub_resource type="StandardMaterial3D" id="StandardMaterial3D_u7x6n"]
 albedo_texture = ExtResource("7_3c3f4")
 uv1_triplanar = true
@@ -142,6 +144,10 @@ material_override = SubResource("StandardMaterial3D_3c3f4")
 use_collision = true
 size = Vector3(6.39, 3, 1)
 num_stairs = 10
+
+[node name="Path3D" type="Path3D" parent="Enviroment" unique_id=666057935]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -43.235237, 0, 0)
+curve = SubResource("Curve3D_u7x6n")
 
 [node name="PhysicsObjects" type="Node3D" parent="." unique_id=909133689]
 

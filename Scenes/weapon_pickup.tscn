@@ -18,11 +18,11 @@ shoot_sound = ExtResource("3_7o1bu")
 unholster_sound = ExtResource("4_oaj4s")
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c256x"]
-size = Vector3(0.06, 0.22, 0.395)
+size = Vector3(0.175, 0.22, 0.395)
 
 [node name="WeaponPickup" type="RigidBody3D" unique_id=507376121]
 transform = Transform3D(1, 0, 0, 0, 0.99999994, 0, 0, 0, 0.99999994, 0, 0, 0)
-collision_layer = 257
+collision_layer = 256
 script = ExtResource("1_12psw")
 weapon_resource = SubResource("Resource_fnt2r")
 
