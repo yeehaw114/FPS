@@ -8,7 +8,7 @@
 [ext_resource type="FontFile" uid="uid://b1f72vv0gu1bx" path="res://Fonts/PixelOperator.ttf" id="3_vgqql"]
 [ext_resource type="Script" uid="uid://oau0bebf4bj0" path="res://Scripts/Player/weapon_manager.gd" id="5_fkybt"]
 [ext_resource type="Script" uid="uid://crn8hpqe3fryo" path="res://Scripts/Player/sound_manager.gd" id="6_x3wgy"]
-[ext_resource type="AudioStream" uid="uid://cy2y7dpuqr4xh" path="res://Sounds/Footsteps/footstep_short.wav" id="7_3smsa"]
+[ext_resource type="AudioStream" uid="uid://dn6oloia1i6x2" path="res://Sounds/Footsteps/concrete_footstep_1.wav" id="9_f1ek2"]
 
 [sub_resource type="CapsuleShape3D" id="CapsuleShape3D_ufjhq"]
 radius = 0.45
@@ -48,7 +48,7 @@ collision_mask = 256
 
 [node name="WeaponDropPoint" type="Node3D" parent="HeadOriginalPosition/Head/CameraHolder/Camera3D" unique_id=421304324]
 unique_name_in_owner = true
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.6174079)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.51)
 
 [node name="WorldModel" type="Node3D" parent="." unique_id=2105951000]
 
@@ -149,5 +149,5 @@ vertical_alignment = 1
 script = ExtResource("6_x3wgy")
 
 [node name="FootstepSFX" type="AudioStreamPlayer3D" parent="SoundManager" unique_id=1382866229]
-stream = ExtResource("7_3smsa")
+stream = ExtResource("9_f1ek2")
 volume_db = -16.119
