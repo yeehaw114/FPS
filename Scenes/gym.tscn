@@ -8,6 +8,7 @@
 [ext_resource type="PackedScene" uid="uid://c8flcpmihepxf" path="res://Scenes/weapon_pickup.tscn" id="6_c256x"]
 [ext_resource type="Texture2D" uid="uid://c2enc0snajcoe" path="res://kenney_prototype-textures/PNG/Purple/texture_01.png" id="7_3c3f4"]
 [ext_resource type="Resource" uid="uid://2u5g8cwtaxnp" path="res://Resources/pistol.tres" id="7_u7x6n"]
+[ext_resource type="Resource" uid="uid://dtxve7syv75p6" path="res://Resources/auto_pistol.tres" id="8_rcyvl"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i3sdk"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -82,6 +83,12 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 2, 0.75, 0)
 material_override = SubResource("StandardMaterial3D_ufjhq")
 use_collision = true
 
+[node name="CSGBox3D7" type="CSGBox3D" parent="Enviroment" unique_id=1752871870]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.5, 0.75, -3.5)
+material_override = SubResource("StandardMaterial3D_ufjhq")
+use_collision = true
+size = Vector3(2, 1, 1)
+
 [node name="CSGBox3D5" type="CSGBox3D" parent="Enviroment" unique_id=1750782405]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.75, 5)
 material_override = SubResource("StandardMaterial3D_ufjhq")
@@ -152,8 +159,12 @@ curve = SubResource("Curve3D_u7x6n")
 [node name="PhysicsObjects" type="Node3D" parent="." unique_id=909133689]
 
 [node name="WeaponPickup" parent="PhysicsObjects" unique_id=507376121 instance=ExtResource("6_c256x")]
-transform = Transform3D(0.54691696, 0.78142804, 0.30041957, -0.82629335, 0.5615484, 0.043619372, -0.13461475, -0.27209085, 0.95280915, 2.191558, 1.6060121, 0.00048422813)
+transform = Transform3D(0.54691696, 0.78142804, 0.30041957, -0.82629335, 0.5615484, 0.043619372, -0.13461475, -0.27209085, 0.95280915, -5.056011, 1.6060121, -3.2830946)
 weapon_resource = ExtResource("7_u7x6n")
+
+[node name="WeaponPickup2" parent="PhysicsObjects" unique_id=102301440 instance=ExtResource("6_c256x")]
+transform = Transform3D(0.54691696, 0.78142804, 0.30041957, -0.82629335, 0.5615484, 0.043619372, -0.13461475, -0.27209085, 0.95280915, -4.234887, 1.6060121, -3.2830946)
+weapon_resource = ExtResource("8_rcyvl")
 
 [node name="RigidBody3D" type="RigidBody3D" parent="PhysicsObjects" unique_id=2142379661]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.1264992, -3.410487)

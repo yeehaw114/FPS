@@ -17,3 +17,4 @@ view_model_scale = Vector3(0.03, 0.03, 0.03)
 weapon_pickup_scale = Vector3(0.04, 0.04, 0.04)
 shoot_sound = ExtResource("2_yvly7")
 unholster_sound = ExtResource("3_vnhtp")
+auto_fire = false

@@ -56,15 +56,6 @@ const RAYCAST_DIST : float = 9999 # Too far seems to break it
 
 var weapon_manager : WeaponManager
 
-var trigger_down := false :
-	set(v):
-		if trigger_down != v:
-			trigger_down = v
-			if trigger_down:
-				on_trigger_down()
-			else:
-				on_trigger_up()
-
 var is_equipped := false :
 	set(v):
 		if is_equipped != v:
@@ -77,17 +68,12 @@ var is_equipped := false :
 var last_fire_time = -999999
 
 func on_process(delta):
-	if trigger_down and auto_fire and Time.get_ticks_msec() - last_fire_time >= max_fire_rate_ms:
-		if current_ammo > 0:
-			fire_shot()
-		else:
-			reload_pressed()
-
-func on_trigger_down():
-	if Time.get_ticks_msec() - last_fire_time >= max_fire_rate_ms and current_ammo > 0:
-		fire_shot()
-	elif current_ammo == 0:
-		reload_pressed()
+	pass
+	#if trigger_down and auto_fire and Time.get_ticks_msec() - last_fire_time >= max_fire_rate_ms:
+		#if current_ammo > 0:
+			#fire_shot()
+		#else:
+			#reload_pressed()
 
 func on_trigger_up():
 	pass
@@ -125,37 +111,3 @@ func reload():
 	else:
 		current_ammo += can_reload
 		reserve_ammo -= can_reload
-
-var num_shots_fired : int = 0
-func fire_shot():
-	weapon_manager.trigger_weapon_shoot_world_anim()
-	weapon_manager.play_anim(view_shoot_anim)
-	weapon_manager.play_sound(shoot_sound)
-	weapon_manager.queue_anim(view_idle_anim)
-	
-	var raycast = weapon_manager.bullet_raycast
-	raycast.rotation.x = weapon_manager.get_current_recoil().x
-	raycast.rotation.y = weapon_manager.get_current_recoil().y
-	raycast.target_position = Vector3(0,0,-abs(RAYCAST_DIST))
-	raycast.force_raycast_update()
-	
-	var bullet_target_pos = raycast.global_transform * raycast.target_position
-	if raycast.is_colliding():
-		var obj = raycast.get_collider()
-		var nrml = raycast.get_collision_normal()
-		var pt = raycast.get_collision_point()
-		bullet_target_pos = pt
-		#BulletDecalPool.spawn_bullet_decal(pt, nrml, obj, raycast.global_basis)
-		if obj is RigidBody3D:
-			obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
-		if obj.has_method("take_damage"):
-			obj.take_damage(self.damage)
-	
-	weapon_manager.show_muzzle_flash()
-	if num_shots_fired % 2 == 0:
-		weapon_manager.make_bullet_trail(bullet_target_pos)
-	weapon_manager.apply_recoil()
-	
-	last_fire_time = Time.get_ticks_msec()
-	current_ammo -= 1
-	num_shots_fired += 1

@@ -2,6 +2,8 @@ extends Node3D
 class_name Gun
 
 @export var muzzle_flash : Node3D
+@export var current_weapon_view_model_muzzle : Node3D
+@export var fire_rate_timer : Timer
 
 var weapon_resource : WeaponResource
 

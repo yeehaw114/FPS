@@ -95,8 +95,8 @@ func _unhandled_input(event):
 	if Input.is_action_just_pressed("drop") and weapon_manager.current_weapon:
 		weapon_manager.drop_current_weapon(weapon_manager.current_weapon_view_model,weapon_manager.current_weapon)
 	
-	if Input.is_action_just_pressed("shoot"):
-		weapon_manager.attempt_shoot()
+	
+				
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
@@ -137,6 +137,13 @@ func _slide_camera_smooth_back_to_origin(delta):
 
 func _process(delta: float) -> void:
 	update_recoil(delta)
+	if weapon_manager.current_weapon:
+		if weapon_manager.current_weapon.auto_fire:
+			if Input.is_action_pressed("shoot") and weapon_manager.can_shoot:
+				weapon_manager.attempt_shoot()
+		else:
+			if Input.is_action_just_pressed("shoot")  and weapon_manager.can_shoot:
+				weapon_manager.attempt_shoot()
 
 func _physics_process(delta: float) -> void:
 	if is_on_floor(): _last_frame_was_on_floor = Engine.get_physics_frames()

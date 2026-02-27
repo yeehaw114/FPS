@@ -4,7 +4,6 @@
 [ext_resource type="Script" uid="uid://c67fnbnruswkr" path="res://Scripts/Player/ui.gd" id="2_6t5aa"]
 [ext_resource type="Script" uid="uid://dekyaarig6443" path="res://Scripts/Player/interact_manager.gd" id="3_3smsa"]
 [ext_resource type="PackedScene" uid="uid://c8flcpmihepxf" path="res://Scenes/weapon_pickup.tscn" id="3_8erm5"]
-[ext_resource type="Resource" uid="uid://2u5g8cwtaxnp" path="res://Resources/pistol.tres" id="3_f1ek2"]
 [ext_resource type="FontFile" uid="uid://b1f72vv0gu1bx" path="res://Fonts/PixelOperator.ttf" id="3_vgqql"]
 [ext_resource type="Script" uid="uid://oau0bebf4bj0" path="res://Scripts/Player/weapon_manager.gd" id="5_fkybt"]
 [ext_resource type="Script" uid="uid://crn8hpqe3fryo" path="res://Scripts/Player/sound_manager.gd" id="6_x3wgy"]
@@ -56,7 +55,6 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.51)
 
 [node name="WeaponManager" type="Node3D" parent="." unique_id=799233520 node_paths=PackedStringArray("player", "bullet_raycast", "view_model_container")]
 script = ExtResource("5_fkybt")
-current_weapon = ExtResource("3_f1ek2")
 player = NodePath("..")
 bullet_raycast = NodePath("../HeadOriginalPosition/Head/CameraHolder/Camera3D/BulletRaycast")
 weapon_pickup_scene = ExtResource("3_8erm5")

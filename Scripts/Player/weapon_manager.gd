@@ -203,19 +203,6 @@ func show_muzzle_flash():
 	if current_weapon_world_model_muzzle:
 		$WorldMuzzleFlash.emitting = true
 
-func make_bullet_trail(target_pos : Vector3):
-	if current_weapon_view_model_muzzle == null:
-		return
-	var muzzle = current_weapon_view_model_muzzle
-	var bullet_dir = (target_pos - muzzle.global_position).normalized()
-	var start_pos = muzzle.global_position + bullet_dir*0.25
-	#if (target_pos - start_pos).length() > 3.0:
-		#var bullet_tracer = preload("res://FPSController/weapon_manager/bullet_tracer.tscn").instantiate()
-		#player.add_sibling(bullet_tracer)
-		#bullet_tracer.global_position = start_pos
-		#bullet_tracer.target_pos = target_pos
-		#bullet_tracer.look_at(target_pos)
-
 var heat : float = 0.0
 func apply_recoil():
 	var spray_recoil := Vector2.ZERO
@@ -249,17 +236,34 @@ func _process(delta: float) -> void:
 	update_weapon_hold_anims()
 	if current_weapon:
 		current_weapon.on_process(delta)
-	if current_weapon_view_model_muzzle:
-		$ViewMuzzleFlash.global_position = current_weapon_view_model_muzzle.global_position
-	if current_weapon_world_model_muzzle:
-		$WorldMuzzleFlash.global_position = current_weapon_world_model_muzzle.global_position
+	#if current_weapon_view_model_muzzle:
+		#$ViewMuzzleFlash.global_position = current_weapon_view_model_muzzle.global_position
+	#if current_weapon_world_model_muzzle:
+		#$WorldMuzzleFlash.global_position = current_weapon_world_model_muzzle.global_position
 	heat = max(0.0, heat - delta * 10.0)
 
 func equip_weapon(weapon: WeaponResource):
 	current_weapon = weapon
 	update_weapon_model()
 
+func make_bullet_trail(target_pos : Vector3):
+	if current_weapon_view_model_muzzle == null:
+		return
+	var muzzle = current_weapon_view_model_muzzle
+	var bullet_dir = (target_pos - muzzle.global_position).normalized()
+	var start_pos = muzzle.global_position + bullet_dir*0.3
+	if (target_pos - start_pos).length() > 3.0:
+		var bullet_tracer = preload("res://Scenes/bullet_tracer.tscn").instantiate()
+		player.add_sibling(bullet_tracer)
+		bullet_tracer.global_position = start_pos
+		bullet_tracer.target_pos = target_pos
+		bullet_tracer.look_at(target_pos)
+
+var num_shots_fired : int = 0 
+var can_shoot = true
 func attempt_shoot():
+	if not can_shoot:
+		return
 	if current_weapon_view_model:
 		current_weapon_view_model.apply_recoil()
 		play_sound(current_weapon.shoot_sound)
@@ -274,11 +278,19 @@ func attempt_shoot():
 			var nrml = raycast.get_collision_normal()
 			var pt = raycast.get_collision_point()
 			bullet_target_pos = pt
-			#BulletDecalPool.spawn_bullet_decal(pt, nrml, obj, raycast.global_basis)
+			BulletDecalPool.spawn_bullet_decal(pt, nrml, obj, raycast.global_basis)
 			if obj is RigidBody3D:
 				obj.apply_impulse(-nrml * 5.0 / obj.mass, pt - obj.global_position)
 			if obj.has_method("take_damage"):
 				obj.take_damage(self.damage)
+		make_bullet_trail(bullet_target_pos)
+		num_shots_fired += 1
+		
+		# Start fire rate delay
+		can_shoot = false
+		current_weapon_view_model.fire_rate_timer.start()
+		await current_weapon_view_model.fire_rate_timer.timeout
+		can_shoot = true
 
 @export var weapon_throw_speed : float = 2.0
 func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):

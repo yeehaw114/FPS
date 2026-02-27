@@ -1,0 +1,19 @@
+[gd_resource type="Resource" script_class="WeaponResource" format=3 uid="uid://dtxve7syv75p6"]
+
+[ext_resource type="Script" uid="uid://c8kqkfya7jrq1" path="res://Resources/Scripts/weapon_resource.gd" id="1_2w4g2"]
+[ext_resource type="PackedScene" uid="uid://bt1eory77080v" path="res://WeaponModels/temp_pistol.tscn" id="1_14f6l"]
+[ext_resource type="AudioStream" uid="uid://b0xr3ee0i1jrk" path="res://Sounds/Guns/freesound_community-meaty-gunshot-101257.mp3" id="3_s5uxp"]
+[ext_resource type="AudioStream" uid="uid://bjplg6mwuan82" path="res://Sounds/Guns/freesound_community-pistol-draw-unholster-80799.mp3" id="4_1qyln"]
+[ext_resource type="PackedScene" uid="uid://46y5xf1h11ta" path="res://Scenes/pistol.tscn" id="5_xfgk6"]
+
+[resource]
+script = ExtResource("1_2w4g2")
+name = "M1911"
+view_model = ExtResource("5_xfgk6")
+glb_model = ExtResource("1_14f6l")
+view_model_pos = Vector3(0.23, -0.105, -0.32)
+view_model_rot = Vector3(0, 180, 0)
+view_model_scale = Vector3(0.03, 0.03, 0.03)
+weapon_pickup_scale = Vector3(0.04, 0.04, 0.04)
+shoot_sound = ExtResource("3_s5uxp")
+unholster_sound = ExtResource("4_1qyln")
