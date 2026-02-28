@@ -36,6 +36,7 @@ func update_weapon_model() -> void:
 	if current_weapon_view_model != null and is_instance_valid(current_weapon_view_model):
 		current_weapon_view_model.queue_free()
 		current_weapon_view_model.get_parent().remove_child(current_weapon_view_model)
+		current_weapon_view_model = null
 	if current_weapon_world_model != null and is_instance_valid(current_weapon_world_model):
 		current_weapon_world_model.queue_free()
 		current_weapon_world_model.get_parent().remove_child(current_weapon_world_model)
@@ -312,3 +313,4 @@ func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
 			new_weapon_pickup.apply_impulse(throw_dir * weapon_throw_speed) # adjust strength
 		
 		weapon.queue_free()
+		current_weapon_view_model = null

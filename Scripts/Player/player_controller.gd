@@ -90,10 +90,13 @@ func _unhandled_input(event):
 		if interactable_object != null:
 			if interactable_object is EquipableWeapon:
 				if interactable_object.weapon_resource != null:
+					if weapon_manager.current_weapon_view_model and weapon_manager.current_weapon:
+						weapon_manager.drop_current_weapon(weapon_manager.current_weapon_view_model,weapon_manager.current_weapon)
 					weapon_manager.equip_weapon(interactable_object.weapon_resource)
 					interactable_object.despawn()
 	if Input.is_action_just_pressed("drop") and weapon_manager.current_weapon:
 		weapon_manager.drop_current_weapon(weapon_manager.current_weapon_view_model,weapon_manager.current_weapon)
+		
 	
 	
 				
@@ -115,7 +118,6 @@ func _headbob_effect(delta):
 	if sin(headbob_time * HEADBOB_FREQUENCY) < -0.9:
 		if not has_stepped_this_cycle:
 			sound_manager.play_footstep()
-			print('footstep')
 			has_stepped_this_cycle = true
 	else:
 		has_stepped_this_cycle = false

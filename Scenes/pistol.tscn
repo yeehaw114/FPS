@@ -50,5 +50,5 @@ lerp_speed = 5.0
 recoil_speed = 7.0
 
 [node name="FireRateTimer" type="Timer" parent="." unique_id=1359970506]
-wait_time = 0.1
+wait_time = 0.075
 one_shot = true
