@@ -8,15 +8,68 @@
 
 [sub_resource type="Animation" id="Animation_j1qo2"]
 length = 0.001
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_Scene:position")
+tracks/0/interp = 1
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0.23, -0.105, -0.32)]
+}
+tracks/1/type = "value"
+tracks/1/imported = false
+tracks/1/enabled = true
+tracks/1/path = NodePath("Sketchfab_Scene:rotation")
+tracks/1/interp = 1
+tracks/1/loop_wrap = true
+tracks/1/keys = {
+"times": PackedFloat32Array(0),
+"transitions": PackedFloat32Array(1),
+"update": 0,
+"values": [Vector3(0, 0, 0)]
+}
 
 [sub_resource type="Animation" id="Animation_v21tj"]
 resource_name = "equip"
-length = 0.4
+length = 0.3
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_Scene:position")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.3),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(0.23, -3, -0.32), Vector3(0.23, -0.105, -0.32)]
+}
+
+[sub_resource type="Animation" id="Animation_1nf8w"]
+resource_name = "reload"
+length = 0.5
+tracks/0/type = "value"
+tracks/0/imported = false
+tracks/0/enabled = true
+tracks/0/path = NodePath("Sketchfab_Scene:rotation")
+tracks/0/interp = 2
+tracks/0/loop_wrap = true
+tracks/0/keys = {
+"times": PackedFloat32Array(0, 0.5),
+"transitions": PackedFloat32Array(1, 1),
+"update": 0,
+"values": [Vector3(6.3529983, 0, 0), Vector3(0, 0, 0)]
+}
 
 [sub_resource type="AnimationLibrary" id="AnimationLibrary_ui64p"]
 _data = {
 &"RESET": SubResource("Animation_j1qo2"),
-&"equip": SubResource("Animation_v21tj")
+&"equip": SubResource("Animation_v21tj"),
+&"reload": SubResource("Animation_1nf8w")
 }
 
 [node name="Pistol" type="Node3D" unique_id=995932231 node_paths=PackedStringArray("muzzle_flash", "current_weapon_view_model_muzzle", "fire_rate_timer")]
@@ -26,6 +79,7 @@ current_weapon_view_model_muzzle = NodePath("Sketchfab_Scene/Muzzle")
 fire_rate_timer = NodePath("FireRateTimer")
 
 [node name="Sketchfab_Scene" parent="." unique_id=1649781894 instance=ExtResource("1_j1qo2")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0.23, -0.105, -0.32)
 
 [node name="Muzzle" type="Node3D" parent="Sketchfab_Scene" unique_id=121652819]
 transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 3.0189576, 2.3084679, 5.0710697)
@@ -37,6 +91,7 @@ visible = false
 
 [node name="AnimationPlayer" type="AnimationPlayer" parent="." unique_id=82103507]
 libraries/ = SubResource("AnimationLibrary_ui64p")
+autoplay = &"equip"
 
 [node name="RecoilManager" type="Node3D" parent="." unique_id=1798826608 node_paths=PackedStringArray("target_object")]
 unique_name_in_owner = true

@@ -43,7 +43,7 @@ enum CharacterHoldStyle {
 @export var damage = 10
 
 @export var current_ammo := INF
-@export var magazine_capacity := INF
+@export var magazine_capacity := 10
 @export var reserve_ammo := INF
 @export var max_reserve_ammo := INF
 

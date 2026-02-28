@@ -3,6 +3,7 @@ extends Node3D
 
 const RAYCAST_DIST : float = 9999 # Too far seems to break it
 
+@export var UI: Control
 @export var allow_shoot : bool = true
 
 @export var current_weapon : WeaponResource :
@@ -23,6 +24,9 @@ const RAYCAST_DIST : float = 9999 # Too far seems to break it
 
 @export var view_model_container : Node3D
 @export var world_model_container : Node3D
+
+@export var total_pistol_ammo := 20
+var ammo_in_mag := 0
 
 var current_weapon_view_model : Node3D
 var current_weapon_world_model : Node3D
@@ -49,13 +53,10 @@ func update_weapon_model() -> void:
 			current_weapon_view_model.rotation_degrees = current_weapon.view_model_rot
 			current_weapon_view_model.scale = current_weapon.view_model_scale
 			apply_clip_and_fov_shader_to_view_model(current_weapon_view_model)
-			#%WeaponHolder.target_object = current_weapon_view_model
-			#%WeaponHolder.set_values()
 			current_weapon_view_model.set_target_object(current_weapon)
 			
 			if current_weapon_view_model.get_node_or_null("AnimationPlayer"):
 				current_weapon_view_model.get_node_or_null("AnimationPlayer").connect("current_animation_changed", current_anim_changed)
-				print('Found weapon anim player: '+str(current_weapon_view_model.get_node_or_null("AnimationPlayer")))
 		if world_model_container and current_weapon.world_model:
 			current_weapon_world_model = current_weapon.world_model.instantiate()
 			world_model_container.add_child(current_weapon_world_model)
@@ -121,8 +122,7 @@ func apply_clip_and_fov_shader_to_view_model(node3d : Node3D, fov_or_negative_fo
 				"metallic_texture_channel",
 				tex_channels[base_mat.metallic_texture_channel]
 			)
-
-			# ✅ THIS is the key fix — instance override only
+			
 			mesh_instance.set_surface_override_material(surface_idx, weapon_shader_material)
 
 func play_sound(sound : AudioStream):
@@ -242,10 +242,14 @@ func _process(delta: float) -> void:
 	#if current_weapon_world_model_muzzle:
 		#$WorldMuzzleFlash.global_position = current_weapon_world_model_muzzle.global_position
 	heat = max(0.0, heat - delta * 10.0)
-
+@export var current_mag_size := 1
 func equip_weapon(weapon: WeaponResource):
-	current_weapon = weapon
-	update_weapon_model()
+	if weapon:
+		current_weapon = weapon
+		current_mag_size = weapon.magazine_capacity
+		UI.has_weapon_equiped(true)
+		UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
+		update_weapon_model()
 
 func make_bullet_trail(target_pos : Vector3):
 	if current_weapon_view_model_muzzle == null:
@@ -262,9 +266,9 @@ func make_bullet_trail(target_pos : Vector3):
 
 var num_shots_fired : int = 0 
 var can_shoot = true
-func attempt_shoot():
-	if not can_shoot:
-		return
+func attempt_shoot() -> bool:
+	if not can_shoot or ammo_in_mag < 1 or is_reloading:
+		return false
 	if current_weapon_view_model:
 		current_weapon_view_model.apply_recoil()
 		play_sound(current_weapon.shoot_sound)
@@ -286,17 +290,26 @@ func attempt_shoot():
 				obj.take_damage(self.damage)
 		make_bullet_trail(bullet_target_pos)
 		num_shots_fired += 1
+		total_pistol_ammo -= 1
+		ammo_in_mag -= 1
+		UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
+		print('total pistol rounds: '+str(total_pistol_ammo))
+		print('ammo in mag: '+str(ammo_in_mag))
 		
 		# Start fire rate delay
 		can_shoot = false
 		current_weapon_view_model.fire_rate_timer.start()
 		await current_weapon_view_model.fire_rate_timer.timeout
 		can_shoot = true
+		return true
+	else:
+		return false
 
 @export var weapon_throw_speed : float = 2.0
 func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
 	if is_instance_valid(weapon) and weapon:
 		current_weapon = null
+		UI.has_weapon_equiped(false)
 		
 		var new_weapon_pickup := weapon_pickup_scene.instantiate()
 		new_weapon_pickup.weapon_resource = weapon_resource
@@ -314,3 +327,14 @@ func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
 		
 		weapon.queue_free()
 		current_weapon_view_model = null
+
+var is_reloading := false
+func attempt_reload():
+	var space_left_in_mag := current_mag_size - ammo_in_mag
+	var anim_player : AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
+	is_reloading = true
+	ammo_in_mag = clamp(total_pistol_ammo,0,current_mag_size)
+	UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
+	play_anim('reload')
+	await anim_player.animation_finished
+	is_reloading = false

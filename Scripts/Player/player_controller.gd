@@ -96,10 +96,9 @@ func _unhandled_input(event):
 					interactable_object.despawn()
 	if Input.is_action_just_pressed("drop") and weapon_manager.current_weapon:
 		weapon_manager.drop_current_weapon(weapon_manager.current_weapon_view_model,weapon_manager.current_weapon)
-		
+	if Input.is_action_just_pressed("reload") and weapon_manager.current_weapon:
+		weapon_manager.attempt_reload()
 	
-	
-				
 	
 	if Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
 		if event is InputEventMouseMotion:
@@ -371,4 +370,5 @@ func _handle_air_physics(delta: float) -> void:
 	if is_on_wall():
 		clip_velocity(get_wall_normal(),1,delta) #for surfing
 	
+
 	

@@ -53,8 +53,9 @@ transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0, -0.51)
 
 [node name="MeshInstance3D" type="MeshInstance3D" parent="WorldModel" unique_id=1839580569]
 
-[node name="WeaponManager" type="Node3D" parent="." unique_id=799233520 node_paths=PackedStringArray("player", "bullet_raycast", "view_model_container")]
+[node name="WeaponManager" type="Node3D" parent="." unique_id=799233520 node_paths=PackedStringArray("UI", "player", "bullet_raycast", "view_model_container")]
 script = ExtResource("5_fkybt")
+UI = NodePath("../CanvasLayer/UI")
 player = NodePath("..")
 bullet_raycast = NodePath("../HeadOriginalPosition/Head/CameraHolder/Camera3D/BulletRaycast")
 weapon_pickup_scene = ExtResource("3_8erm5")
@@ -140,6 +141,23 @@ offset_bottom = 32.14499
 grow_horizontal = 2
 grow_vertical = 2
 theme_override_fonts/font = ExtResource("3_vgqql")
+horizontal_alignment = 1
+vertical_alignment = 1
+
+[node name="AmmoLabel" type="Label" parent="CanvasLayer/UI" unique_id=3417655]
+texture_filter = 1
+layout_mode = 1
+anchors_preset = 3
+anchor_left = 1.0
+anchor_top = 1.0
+anchor_right = 1.0
+anchor_bottom = 1.0
+offset_left = -40.0
+offset_top = -23.0
+grow_horizontal = 0
+grow_vertical = 0
+theme_override_fonts/font = ExtResource("3_vgqql")
+text = "20"
 horizontal_alignment = 1
 vertical_alignment = 1
 
