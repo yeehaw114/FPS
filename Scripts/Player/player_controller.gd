@@ -58,6 +58,9 @@ func get_move_speed() -> float:
 		return walk_speed * 0.6
 	return sprint_speed if Input.is_action_pressed("sprint") else walk_speed
 
+func gain_ammo(ammo_amount):
+	weapon_manager.gain_ammo(ammo_amount)
+
 func _push_away_rigid_bodies():
 	for i in get_slide_collision_count():
 		var c := get_slide_collision(i)
@@ -136,10 +139,59 @@ func _slide_camera_smooth_back_to_origin(delta):
 	if %CameraHolder.position.y == 0:
 		_saved_camera_global_pos = null # Stop smoothing camera
 
+var accuracy := 100.0
+var state : player_movement_states = player_movement_states.stand_still
+enum player_movement_states {stand_still,stand_move,stand_sprint,crouch_still,crouch_move,air,}
+@export_category('Accuracy values')
+@export_range(0,100) var stand_still_accuracy := 95
+@export_range(0,100) var stand_move_accuracy := 85
+@export_range(0,100) var stand_sprint_accuracy := 50
+@export_range(0,100) var crouch_still_accuracy := 99
+@export_range(0,100) var crouch_move_accuracy := 90
+@export_range(0,100) var air_accuracy := 33
+@export var accuracy_lerp_strength := 3.0
+func determine_state() -> player_movement_states:
+	if is_on_floor() and velocity != Vector3.ZERO:
+		if is_crouched:
+			state = player_movement_states.crouch_move
+		else:
+			if velocity.length() < 6.0:
+				state = player_movement_states.stand_move
+			else:
+				state = player_movement_states.stand_sprint
+	elif is_on_floor() and velocity == Vector3.ZERO:
+		if is_crouched:
+			state = player_movement_states.crouch_still
+		else:
+			state = player_movement_states.stand_still
+	elif not is_on_floor():
+		state = player_movement_states.air
+	
+	return state
+
+func lerp_accuracy(state: player_movement_states):
+	var accuracy_to_lerp_to : float
+	match state:
+		player_movement_states.stand_still:
+			accuracy_to_lerp_to = stand_still_accuracy
+		player_movement_states.stand_move:
+			accuracy_to_lerp_to = stand_move_accuracy
+		player_movement_states.stand_sprint:
+			accuracy_to_lerp_to = stand_sprint_accuracy
+		player_movement_states.crouch_still:
+			accuracy_to_lerp_to = crouch_still_accuracy
+		player_movement_states.crouch_move:
+			accuracy_to_lerp_to = crouch_move_accuracy
+		player_movement_states.air:
+			accuracy_to_lerp_to = air_accuracy
+	accuracy = lerp(accuracy,accuracy_to_lerp_to,accuracy_lerp_strength)
+	UI.update_accuracy_label(accuracy)
+
 func _process(delta: float) -> void:
 	update_recoil(delta)
 	if weapon_manager.current_weapon:
-		if weapon_manager.current_weapon.auto_fire:
+		var is_gun_empty = weapon_manager.is_weapon_out_of_ammo(weapon_manager.current_weapon_view_model)
+		if weapon_manager.current_weapon.auto_fire and !is_gun_empty:
 			if Input.is_action_pressed("shoot") and weapon_manager.can_shoot:
 				weapon_manager.attempt_shoot()
 		else:
@@ -171,6 +223,9 @@ func _physics_process(delta: float) -> void:
 			move_and_slide()
 			_snap_down_to_stairs_check()
 	_slide_camera_smooth_back_to_origin(delta)
+	
+	determine_state()
+	lerp_accuracy(state)
 	
 	cam_tilt(input_dir.x, delta)
 	weapon_tilt(input_dir.x, delta)

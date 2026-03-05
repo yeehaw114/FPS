@@ -5,7 +5,6 @@ const RAYCAST_DIST : float = 9999 # Too far seems to break it
 
 @export var UI: Control
 @export var allow_shoot : bool = true
-
 @export var current_weapon : WeaponResource :
 	set(v):
 		if v != current_weapon:
@@ -25,7 +24,7 @@ const RAYCAST_DIST : float = 9999 # Too far seems to break it
 @export var view_model_container : Node3D
 @export var world_model_container : Node3D
 
-@export var total_pistol_ammo := 20
+@export var total_pistol_ammo := 100
 var ammo_in_mag := 0
 
 var current_weapon_view_model : Node3D
@@ -217,17 +216,6 @@ func apply_recoil():
 func get_current_recoil():
 	return player.get_current_recoil() if player.has_method("get_current_recoil") else Vector2()
 
-func _unhandled_input(event):
-	#if current_weapon and is_inside_tree() and Input.get_mouse_mode() == Input.MOUSE_MODE_CAPTURED:
-		#if event.is_action_pressed("shoot") and allow_shoot:
-			#current_weapon.trigger_down = true
-		#elif event.is_action_released("shoot"):
-			#current_weapon.trigger_down = false
-		
-		#if event.is_action_pressed("reload"):
-			#current_weapon.reload_pressed()
-	pass
-
 # Called when the node enters the scene tree for the first time.
 func _ready() -> void:
 	update_weapon_model()
@@ -266,8 +254,12 @@ func make_bullet_trail(target_pos : Vector3):
 
 var num_shots_fired : int = 0 
 var can_shoot = true
+@export var max_bullet_spread_deg := 0.0
+var max_bullet_spread_rad := deg_to_rad(max_bullet_spread_deg)
 func attempt_shoot() -> bool:
 	if not can_shoot or ammo_in_mag < 1 or is_reloading:
+		play_sound(current_weapon.gun_click_sound)
+		current_weapon_view_model.apply_recoil()
 		return false
 	if current_weapon_view_model:
 		current_weapon_view_model.apply_recoil()
@@ -275,6 +267,19 @@ func attempt_shoot() -> bool:
 		current_weapon_view_model.emit_muzzle_flash()
 		var raycast = bullet_raycast
 		raycast.target_position = Vector3(0,0,-abs(RAYCAST_DIST))
+
+		var spread_deg = map_accuracy_to_max_degree(player.accuracy)
+		var spread_rad = deg_to_rad(spread_deg)
+
+		var yaw   = randf_range(-spread_rad, spread_rad)
+		var pitch = randf_range(-spread_rad, spread_rad)
+
+		# reset raycast orientation first (important — prevents drift)
+		raycast.rotation = Vector3.ZERO
+
+		# apply spread
+		raycast.rotate_y(yaw)
+		raycast.rotate_x(pitch)
 		raycast.force_raycast_update()
 		
 		var bullet_target_pos = raycast.global_transform * raycast.target_position
@@ -293,8 +298,6 @@ func attempt_shoot() -> bool:
 		total_pistol_ammo -= 1
 		ammo_in_mag -= 1
 		UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
-		print('total pistol rounds: '+str(total_pistol_ammo))
-		print('ammo in mag: '+str(ammo_in_mag))
 		
 		# Start fire rate delay
 		can_shoot = false
@@ -304,6 +307,19 @@ func attempt_shoot() -> bool:
 		return true
 	else:
 		return false
+
+func is_weapon_out_of_ammo(weapon: Node3D) -> bool:
+	if ammo_in_mag < 1:
+		return true
+	else:
+		return false
+
+func map_accuracy_to_max_degree(accuracy: float) -> float:
+	var accuracy_as_percentage := accuracy * 0.01
+	var new_degree := max_bullet_spread_deg - max_bullet_spread_deg * accuracy_as_percentage
+	print('accuracy: '+str(accuracy))
+	print(new_degree)
+	return new_degree
 
 @export var weapon_throw_speed : float = 2.0
 func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
@@ -329,12 +345,22 @@ func drop_current_weapon(weapon: Gun, weapon_resource: WeaponResource):
 		current_weapon_view_model = null
 
 var is_reloading := false
+var debug_mesh := ImmediateMesh.new()
+var debug_instance := MeshInstance3D.new()
 func attempt_reload():
 	var space_left_in_mag := current_mag_size - ammo_in_mag
+	if is_reloading or total_pistol_ammo < 1 or space_left_in_mag == 0:
+		return
 	var anim_player : AnimationPlayer = current_weapon_view_model.get_node_or_null("AnimationPlayer")
 	is_reloading = true
 	ammo_in_mag = clamp(total_pistol_ammo,0,current_mag_size)
 	UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
 	play_anim('reload')
+	play_sound(current_weapon.reload_sound)
 	await anim_player.animation_finished
 	is_reloading = false
+	
+func gain_ammo(ammo:int):
+	total_pistol_ammo += ammo
+	UI.update_ammo_label(ammo_in_mag,total_pistol_ammo)
+	

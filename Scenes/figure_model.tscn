@@ -1,0 +1,5 @@
+[gd_scene format=3 uid="uid://cbs46pnugsp2m"]
+
+[ext_resource type="PackedScene" uid="uid://dq0p5tp1x808t" path="res://wooden_mannequin_lay_figure_-_rigged/scene.gltf" id="1_p4itn"]
+
+[node name="FigureModel" unique_id=991693966 instance=ExtResource("1_p4itn")]

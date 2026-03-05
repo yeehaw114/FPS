@@ -37,6 +37,7 @@ enum CharacterHoldStyle {
 @export var shoot_sound : AudioStream
 @export var reload_sound : AudioStream
 @export var unholster_sound : AudioStream
+@export var gun_click_sound : AudioStream
 
 ## Weapon logic
 

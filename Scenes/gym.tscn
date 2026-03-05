@@ -8,8 +8,10 @@
 [ext_resource type="PackedScene" uid="uid://c8flcpmihepxf" path="res://Scenes/weapon_pickup.tscn" id="6_c256x"]
 [ext_resource type="Texture2D" uid="uid://bchs0sd3nlsbs" path="res://kenney_prototype-textures/PNG/Green/texture_09.png" id="6_qdllb"]
 [ext_resource type="Texture2D" uid="uid://c2enc0snajcoe" path="res://kenney_prototype-textures/PNG/Purple/texture_01.png" id="7_3c3f4"]
+[ext_resource type="PackedScene" uid="uid://dcxce4x02djwx" path="res://Scenes/ammo_box.tscn" id="7_8wnjo"]
 [ext_resource type="Resource" uid="uid://2u5g8cwtaxnp" path="res://Resources/pistol.tres" id="7_u7x6n"]
 [ext_resource type="Resource" uid="uid://dtxve7syv75p6" path="res://Resources/auto_pistol.tres" id="8_rcyvl"]
+[ext_resource type="PackedScene" uid="uid://dq0p5tp1x808t" path="res://wooden_mannequin_lay_figure_-_rigged/scene.gltf" id="12_6ftps"]
 
 [sub_resource type="ProceduralSkyMaterial" id="ProceduralSkyMaterial_i3sdk"]
 sky_horizon_color = Color(0.66224277, 0.6717428, 0.6867428, 1)
@@ -68,19 +70,22 @@ uv1_triplanar = true
 
 [sub_resource type="BoxShape3D" id="BoxShape3D_c256x"]
 
+[sub_resource type="CapsuleShape3D" id="CapsuleShape3D_6ftps"]
+
 [node name="Gym" type="Node3D" unique_id=1050519239]
 
 [node name="WorldEnvironment" type="WorldEnvironment" parent="." unique_id=737920427]
 environment = SubResource("Environment_ei0x5")
 
 [node name="Player" parent="." unique_id=1319092473 node_paths=PackedStringArray("physics_objects_node") instance=ExtResource("1_stjpo")]
-transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.6996274, 0)
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 0.29694134, 0)
 physics_objects_node = NodePath("../PhysicsObjects")
 walk_speed = 5.3
 sprint_speed = 8.0
 cam_rotation_amount = 0.01
 weapon_sway_amount = 0.1
 weapon_rotation_amount = 0.01
+accuracy_lerp_strength = 0.05
 
 [node name="Enviroment" type="Node3D" parent="." unique_id=123675391]
 
@@ -190,6 +195,12 @@ path_continuous_u = true
 path_u_distance = 1.0
 path_joined = false
 
+[node name="StaticObjects" type="Node3D" parent="Enviroment" unique_id=840823335]
+
+[node name="AmmoBox" parent="Enviroment/StaticObjects" unique_id=1963413543 instance=ExtResource("7_8wnjo")]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 1.9809897, 1.2955874, 0)
+is_infinite = true
+
 [node name="PhysicsObjects" type="Node3D" parent="." unique_id=909133689]
 
 [node name="WeaponPickup" parent="PhysicsObjects" unique_id=507376121 instance=ExtResource("6_c256x")]
@@ -208,3 +219,15 @@ material_override = SubResource("StandardMaterial3D_u7x6n")
 
 [node name="CollisionShape3D" type="CollisionShape3D" parent="PhysicsObjects/RigidBody3D" unique_id=930606160]
 shape = SubResource("BoxShape3D_c256x")
+
+[node name="Entities" type="Node3D" parent="." unique_id=944516918]
+
+[node name="CharacterBody3D" type="CharacterBody3D" parent="Entities" unique_id=751068430]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, -4.2991185, 0, 0)
+
+[node name="Sketchfab_Scene" parent="Entities/CharacterBody3D" unique_id=991693966 instance=ExtResource("12_6ftps")]
+transform = Transform3D(0.44, 0, 0, 0, 0.44, 0, 0, 0, 0.44, 0, 0.26327658, 0)
+
+[node name="CollisionShape3D" type="CollisionShape3D" parent="Entities/CharacterBody3D" unique_id=466751281]
+transform = Transform3D(1, 0, 0, 0, 1, 0, 0, 0, 1, 0, 1.2537811, 0)
+shape = SubResource("CapsuleShape3D_6ftps")

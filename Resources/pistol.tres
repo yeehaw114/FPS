@@ -3,6 +3,8 @@
 [ext_resource type="Script" uid="uid://c8kqkfya7jrq1" path="res://Resources/Scripts/weapon_resource.gd" id="1_tkhkc"]
 [ext_resource type="PackedScene" uid="uid://bt1eory77080v" path="res://WeaponModels/temp_pistol.tscn" id="1_vnhtp"]
 [ext_resource type="PackedScene" uid="uid://46y5xf1h11ta" path="res://Scenes/pistol.tscn" id="2_7j71y"]
+[ext_resource type="AudioStream" uid="uid://b8f58vnys148n" path="res://Sounds/Guns/gun_click.mp3" id="2_b22i1"]
+[ext_resource type="AudioStream" uid="uid://bjnmtqbukobvf" path="res://Sounds/Guns/pistol_reload.mp3" id="2_soqo1"]
 [ext_resource type="AudioStream" uid="uid://b0xr3ee0i1jrk" path="res://Sounds/Guns/freesound_community-meaty-gunshot-101257.mp3" id="2_yvly7"]
 [ext_resource type="AudioStream" uid="uid://bjplg6mwuan82" path="res://Sounds/Guns/freesound_community-pistol-draw-unholster-80799.mp3" id="3_vnhtp"]
 
@@ -16,5 +18,7 @@ view_model_rot = Vector3(0, 180, 0)
 view_model_scale = Vector3(0.03, 0.03, 0.03)
 weapon_pickup_scale = Vector3(0.04, 0.04, 0.04)
 shoot_sound = ExtResource("2_yvly7")
+reload_sound = ExtResource("2_soqo1")
 unholster_sound = ExtResource("3_vnhtp")
+gun_click_sound = ExtResource("2_b22i1")
 auto_fire = false

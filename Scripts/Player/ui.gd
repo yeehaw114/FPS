@@ -2,6 +2,7 @@ extends Control
 
 @onready var speed_label: Label = $SpeedLabel
 @onready var ammo_label: Label = $AmmoLabel
+@onready var accuracy_label: Label = $AccuracyLabel
 
 func _ready() -> void:
 	ammo_label.hide()
@@ -18,3 +19,6 @@ func has_weapon_equiped(toggle: bool):
 		ammo_label.show()
 	else:
 		ammo_label.hide()
+
+func update_accuracy_label(accuracy: float):
+	accuracy_label.text = str(int(accuracy))+'% Accuracy'
